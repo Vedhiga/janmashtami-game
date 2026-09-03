@@ -1,0 +1,257 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+<title>Journey to the Soul — A Janmashtami Quest</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@500;600&family=Cormorant+Garamond:ital,wght@0,500;1,500;1,600&family=Mukta:wght@400;500;600&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="styles.css">
+</head>
+<body>
+
+<canvas id="particle-canvas" aria-hidden="true"></canvas>
+<canvas id="celebration-canvas" aria-hidden="true"></canvas>
+
+<div class="app">
+
+  <!-- ================= TORANA HEADER ================= -->
+  <header class="torana" role="banner">
+    <svg class="torana__arch" viewBox="0 0 800 140" preserveAspectRatio="none" aria-hidden="true">
+      <path d="M0,90 Q400,-10 800,90" stroke="url(#archGold)" stroke-width="3" fill="none"/>
+      <path d="M0,100 Q400,4 800,100" stroke="url(#archGold)" stroke-width="1" fill="none" opacity="0.5"/>
+      <defs>
+        <linearGradient id="archGold" x1="0" y1="0" x2="1" y2="0">
+          <stop offset="0" stop-color="#f59e0b"/>
+          <stop offset="0.5" stop-color="#fef08a"/>
+          <stop offset="1" stop-color="#f59e0b"/>
+        </linearGradient>
+      </defs>
+    </svg>
+
+    <div class="torana__row">
+      <svg class="glyph glyph--feather" viewBox="0 0 60 100" aria-hidden="true">
+        <path d="M30,95 C30,70 20,60 30,10" stroke="#14b8a6" stroke-width="2" fill="none"/>
+        <ellipse cx="30" cy="14" rx="16" ry="20" fill="#00695c" opacity="0.85"/>
+        <ellipse cx="30" cy="14" rx="9" ry="12" fill="#14b8a6"/>
+        <circle cx="30" cy="14" r="4.5" fill="#f59e0b"/>
+        <circle cx="30" cy="14" r="1.8" fill="#061024"/>
+      </svg>
+
+      <div class="torana__title">
+        <p class="eyebrow-free-label">Janmashtami</p>
+        <h1>Journey to the Soul</h1>
+        <p class="torana__sub">A quest through Vrindavan</p>
+      </div>
+
+      <svg class="glyph glyph--flute" viewBox="0 0 100 30" aria-hidden="true">
+        <rect x="4" y="12" width="92" height="7" rx="3.5" fill="url(#fluteGold)"/>
+        <circle cx="24" cy="15.5" r="1.6" fill="#061024"/>
+        <circle cx="38" cy="15.5" r="1.6" fill="#061024"/>
+        <circle cx="52" cy="15.5" r="1.6" fill="#061024"/>
+        <circle cx="66" cy="15.5" r="1.6" fill="#061024"/>
+        <circle cx="80" cy="15.5" r="1.6" fill="#061024"/>
+        <defs>
+          <linearGradient id="fluteGold" x1="0" y1="0" x2="1" y2="0">
+            <stop offset="0" stop-color="#fbbf24"/>
+            <stop offset="1" stop-color="#f59e0b"/>
+          </linearGradient>
+        </defs>
+      </svg>
+    </div>
+
+    <button id="ambient-toggle" class="ambient-toggle" type="button" aria-pressed="false">
+      <svg viewBox="0 0 24 24" class="ambient-toggle__icon" aria-hidden="true">
+        <path d="M4 9v6h4l5 5V4L8 9H4z" fill="currentColor"/>
+        <path class="ambient-toggle__wave" d="M16.5 8.5a5 5 0 0 1 0 7" stroke="currentColor" stroke-width="1.6" fill="none" stroke-linecap="round"/>
+        <path class="ambient-toggle__wave" d="M19 6a8.5 8.5 0 0 1 0 12" stroke="currentColor" stroke-width="1.6" fill="none" stroke-linecap="round" opacity="0.6"/>
+      </svg>
+      <span class="ambient-toggle__label">Sound</span>
+    </button>
+  </header>
+
+  <!-- ================= JOURNEY PATH NAV ================= -->
+  <nav class="river-nav" aria-label="Journey stations">
+    <svg class="river-nav__line" viewBox="0 0 100 900" preserveAspectRatio="none" aria-hidden="true">
+      <path d="M50,10 C10,120 90,220 50,330 C10,440 90,540 50,650 C20,740 80,800 50,890"
+            stroke="#0d2847" stroke-width="10" fill="none"/>
+      <path id="river-progress" d="M50,10 C10,120 90,220 50,330 C10,440 90,540 50,650 C20,740 80,800 50,890"
+            stroke="url(#riverGlow)" stroke-width="3" fill="none" stroke-dasharray="1400" stroke-dashoffset="1400"/>
+      <defs>
+        <linearGradient id="riverGlow" x1="0" y1="0" x2="0" y2="1">
+          <stop offset="0" stop-color="#fef08a"/>
+          <stop offset="1" stop-color="#14b8a6"/>
+        </linearGradient>
+      </defs>
+    </svg>
+
+    <ol class="river-nav__nodes">
+      <li>
+        <button class="node" data-station="1" aria-current="step">
+          <span class="node__dot"><span class="node__flame"></span></span>
+          <span class="node__label">
+            <span class="node__num">Station I</span>
+            <span class="node__name">Who Am I?</span>
+          </span>
+        </button>
+      </li>
+      <li>
+        <button class="node" data-station="2">
+          <span class="node__dot"><span class="node__flame"></span></span>
+          <span class="node__label">
+            <span class="node__num">Station II</span>
+            <span class="node__name">Why Is Life Special?</span>
+          </span>
+        </button>
+      </li>
+      <li>
+        <button class="node" data-station="3">
+          <span class="node__dot"><span class="node__flame"></span></span>
+          <span class="node__label">
+            <span class="node__num">Station III</span>
+            <span class="node__name">What Makes Me Happy?</span>
+          </span>
+        </button>
+      </li>
+      <li>
+        <button class="node node--final" data-station="final">
+          <span class="node__dot node__dot--lotus">
+            <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 2c1 4 4 6 4 10a4 4 0 0 1-8 0c0-4 3-6 4-10z" fill="#f59e0b"/></svg>
+          </span>
+          <span class="node__label">
+            <span class="node__num">The Mirror</span>
+            <span class="node__name">Meet Your Soul</span>
+          </span>
+        </button>
+      </li>
+    </ol>
+  </nav>
+
+  <!-- ================= TEMP: AUDIO DEV PANEL (remove once stations trigger real sfx) ================= -->
+  <section class="dev-audio" aria-label="Audio testing panel (temporary)">
+    <p class="dev-audio__title">Audio test panel — temporary, for chunk review only</p>
+    <div class="dev-audio__row">
+      <button type="button" data-sfx="flute">Flute note</button>
+      <button type="button" data-sfx="chime">Temple chime</button>
+      <button type="button" data-sfx="tick">Wheel tick</button>
+      <button type="button" data-sfx="whoosh">Whoosh</button>
+      <button type="button" data-sfx="click">UI click</button>
+      <button type="button" data-sfx="celebration">Celebration</button>
+    </div>
+    <div class="dev-audio__row" style="margin-top:0.5rem;">
+      <button type="button" id="dev-burst-center">Particle burst (center)</button>
+      <button type="button" id="dev-burst-big">Big celebration burst</button>
+    </div>
+  </section>
+
+  <!-- ================= STATION PANEL ================= -->
+  <main class="stage" id="stage">
+
+    <section class="panel" id="station-1" data-active="true">
+      <p class="panel__kicker">Station I</p>
+      <h2 class="panel__title">Who Am I?</h2>
+      <p class="panel__intro">Beneath every name you've worn and every role you've played, something has watched it all without changing. Spin the wheel and question what you find.</p>
+
+      <div class="panel__body">
+        <div class="wheel-activity" id="wheel-activity">
+          <div class="wheel-stage">
+            <div class="wheel-frame">
+              <svg id="identity-wheel" viewBox="0 0 320 320" role="img" aria-label="Identity wheel with seven slices: Name, Age, Body, Emotions, Career, Relationships, Memories"></svg>
+              <div class="wheel-pointer" aria-hidden="true"></div>
+              <div class="wheel-hub" aria-hidden="true">
+                <svg viewBox="0 0 40 40"><circle cx="20" cy="20" r="17" fill="#061024" stroke="#f59e0b" stroke-width="1.5"/><path d="M20 8c1.2 5 4.5 7 4.5 12a4.5 4.5 0 0 1-9 0c0-5 3.3-7 4.5-12z" fill="#f59e0b"/></svg>
+              </div>
+            </div>
+
+            <button id="spin-btn" class="btn-primary" type="button">Spin the Wheel</button>
+            <p class="spin-counter" id="spin-counter">Slices explored: 0 of 7 &middot; need 4 to continue</p>
+          </div>
+
+          <div class="soul-reveal" id="soul-reveal-a" hidden tabindex="-1">
+            <p class="panel__kicker">The Soul Reveal</p>
+            <h3 class="soul-reveal__title">Something remains constant.</h3>
+            <p class="soul-reveal__quote">Name, age, body, feeling, title, bond, and memory — every one of them has already changed since you were born, and every one will change again. Yet something has been quietly aware of all of it, unmoved, the whole time.</p>
+            <p class="soul-reveal__verse">"As the soul passes, in this body, through childhood, youth and old age, so too it passes into another body. The wise are not deluded by this."<br><span>— Bhagavad Gita 2.13</span></p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="panel" id="station-2" data-active="false">
+      <p class="panel__kicker">Station II</p>
+      <h2 class="panel__title">Why Is Human Life Special?</h2>
+      <p class="panel__intro">We chase one milestone, then the next, certain the finish line will finally feel like enough. What are we actually running toward?</p>
+      <div class="panel__body panel__body--placeholder">
+        <p>The Life Race and the five Mystery Boxes await here.</p>
+      </div>
+    </section>
+
+    <section class="panel" id="station-3" data-active="false">
+      <p class="panel__kicker">Station III</p>
+      <h2 class="panel__title">What Really Makes Me Happy?</h2>
+      <p class="panel__intro">Some joy rises and falls with circumstance. Some doesn't move at all. Ride the current and feel the difference for yourself.</p>
+      <div class="panel__body panel__body--placeholder">
+        <p>The Happiness Roller Coaster runs here.</p>
+      </div>
+    </section>
+
+    <section class="panel" id="station-final" data-active="false">
+      <p class="panel__kicker">The Final Station</p>
+      <h2 class="panel__title">The Mirror Reveal</h2>
+      <p class="panel__intro">Everything you've discovered leads back to a single question, asked in front of your own reflection.</p>
+      <div class="panel__body panel__body--placeholder">
+        <p>The Vrindavan Mirror, your Soul Card, and the Prayer Wall live here.</p>
+      </div>
+    </section>
+
+  </main>
+
+</div>
+
+<div class="modal-overlay" id="inquiry-modal" hidden>
+  <div class="inquiry-card" role="dialog" aria-modal="true" aria-labelledby="inquiry-question">
+    <p class="inquiry-card__label" id="inquiry-slice-label">Name</p>
+    <h3 class="inquiry-card__question" id="inquiry-question">Can this change?</h3>
+
+    <div class="inquiry-card__answers" id="inquiry-answers">
+      <button type="button" class="btn-outline" data-answer="yes">Yes</button>
+      <button type="button" class="btn-outline" data-answer="no">No</button>
+    </div>
+
+    <p class="inquiry-card__explanation" id="inquiry-explanation" hidden></p>
+
+    <button type="button" class="btn-primary inquiry-card__continue" id="inquiry-continue" hidden>Continue</button>
+  </div>
+</div>
+
+<script src="particles.js"></script>
+<script src="audio.js"></script>
+<script src="station1.js"></script>
+<script src="app.js"></script>
+<script>
+  // TEMP: wires the dev audio panel above. Delete this block together with
+  // the .dev-audio section once real station gameplay calls these sounds.
+  document.querySelectorAll(".dev-audio [data-sfx]").forEach((btn) => {
+    btn.addEventListener("click", () => {
+      const kind = btn.dataset.sfx;
+      if (kind === "flute") AudioEngine.playFluteNote(440, { duration: 1.6, volume: 0.25 });
+      if (kind === "chime") AudioEngine.playChime({ volume: 0.3 });
+      if (kind === "tick") AudioEngine.playTick({ volume: 0.3 });
+      if (kind === "whoosh") AudioEngine.playWhoosh({ volume: 0.3 });
+      if (kind === "click") AudioEngine.playClick({ volume: 0.25 });
+      if (kind === "celebration") AudioEngine.playCelebration();
+      console.log("[AudioEngine debug]", AudioEngine.debugInfo());
+    });
+  });
+
+  document.getElementById("dev-burst-center").addEventListener("click", () => {
+    ParticleEngine.burst(0.5, 0.4, { count: 50 });
+  });
+  document.getElementById("dev-burst-big").addEventListener("click", () => {
+    ParticleEngine.burst(0.5, 0.35, { count: 120 });
+    AudioEngine.playCelebration();
+  });
+</script>
+</body>
+</html>

@@ -1,0 +1,560 @@
+/* ============================================================
+   VRINDAVAN QUEST — DESIGN TOKENS
+   ============================================================ */
+:root {
+  /* Color */
+  --peacock-950: #061024;
+  --peacock-900: #081a33;
+  --peacock-800: #0d2847;
+  --peacock-700: #123a63;
+  --teal-700: #00695c;
+  --teal-500: #0d9488;
+  --teal-400: #14b8a6;
+  --gold-600: #b45309;
+  --gold-500: #f59e0b;
+  --gold-300: #fbbf24;
+  --gold-100: #fef08a;
+  --saffron-500: #ff7a4d;
+  --ivory: #f6f1e4;
+  --ivory-dim: rgba(246, 241, 228, 0.72);
+
+  /* Type */
+  --font-display: 'Cinzel', serif;
+  --font-quote: 'Cormorant Garamond', serif;
+  --font-body: 'Mukta', system-ui, sans-serif;
+
+  /* Rhythm */
+  --space-1: 0.5rem;
+  --space-2: 0.875rem;
+  --space-3: 1.5rem;
+  --space-4: 2.5rem;
+  --space-5: 4rem;
+
+  --niche-radius: 68px 68px 14px 14px;
+  --ease-soft: cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+/* ============================================================
+   RESET & BASE
+   ============================================================ */
+* { box-sizing: border-box; }
+html { scroll-behavior: smooth; }
+
+body {
+  margin: 0;
+  min-height: 100vh;
+  background:
+    radial-gradient(ellipse 900px 500px at 50% -10%, rgba(20, 184, 166, 0.16), transparent 60%),
+    radial-gradient(ellipse 700px 500px at 90% 30%, rgba(245, 158, 11, 0.08), transparent 55%),
+    linear-gradient(180deg, var(--peacock-950) 0%, var(--peacock-900) 45%, var(--peacock-950) 100%);
+  color: var(--ivory);
+  font-family: var(--font-body);
+  font-size: 16px;
+  line-height: 1.6;
+  -webkit-font-smoothing: antialiased;
+  overflow-x: hidden;
+}
+
+h1, h2, h3 { margin: 0; font-family: var(--font-display); font-weight: 600; letter-spacing: 0.01em; }
+p { margin: 0; }
+button { font-family: inherit; cursor: pointer; }
+
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after { animation-duration: 0.001ms !important; transition-duration: 0.001ms !important; }
+  html { scroll-behavior: auto; }
+}
+
+:focus-visible {
+  outline: 2px solid var(--gold-300);
+  outline-offset: 3px;
+  border-radius: 4px;
+}
+
+#particle-canvas,
+#celebration-canvas {
+  position: fixed;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  pointer-events: none;
+}
+#particle-canvas { z-index: 0; }
+#celebration-canvas { z-index: 5; }
+
+.app {
+  position: relative;
+  z-index: 1;
+  max-width: 1180px;
+  margin: 0 auto;
+  padding: 0 var(--space-3) var(--space-5);
+}
+
+/* ============================================================
+   TORANA HEADER
+   ============================================================ */
+.torana {
+  position: relative;
+  padding: var(--space-4) var(--space-2) var(--space-3);
+  text-align: center;
+}
+
+.torana__arch {
+  position: absolute;
+  top: 0; left: 0;
+  width: 100%;
+  height: 90px;
+  z-index: 0;
+}
+
+.torana__row {
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: clamp(1rem, 4vw, 3rem);
+  padding-top: var(--space-2);
+}
+
+.glyph { height: 56px; width: auto; flex: 0 0 auto; opacity: 0.9; }
+.glyph--feather { animation: sway 6s ease-in-out infinite; transform-origin: bottom center; }
+.glyph--flute { height: 20px; opacity: 0.85; }
+
+@keyframes sway {
+  0%, 100% { transform: rotate(-3deg); }
+  50% { transform: rotate(3deg); }
+}
+
+.torana__title { display: flex; flex-direction: column; gap: 0.3rem; }
+
+.eyebrow-free-label {
+  font-family: var(--font-quote);
+  font-style: italic;
+  font-size: 1.05rem;
+  color: var(--gold-300);
+  letter-spacing: 0.02em;
+}
+
+.torana__title h1 {
+  font-size: clamp(1.7rem, 4.5vw, 2.6rem);
+  background: linear-gradient(180deg, var(--ivory) 20%, var(--gold-100) 100%);
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+}
+
+.torana__sub {
+  font-family: var(--font-quote);
+  font-style: italic;
+  color: var(--ivory-dim);
+  font-size: 1.1rem;
+}
+
+.ambient-toggle {
+  position: absolute;
+  top: var(--space-3);
+  right: 0;
+  display: flex;
+  align-items: center;
+  gap: 0.4rem;
+  background: rgba(13, 40, 71, 0.6);
+  border: 1px solid rgba(245, 158, 11, 0.35);
+  color: var(--gold-300);
+  padding: 0.45rem 0.85rem;
+  border-radius: 999px;
+  font-size: 0.85rem;
+  backdrop-filter: blur(6px);
+  transition: border-color 0.25s var(--ease-soft), color 0.25s var(--ease-soft);
+}
+.ambient-toggle:hover { border-color: var(--gold-300); color: var(--gold-100); }
+.ambient-toggle__icon { width: 18px; height: 18px; }
+.ambient-toggle[aria-pressed="false"] .ambient-toggle__wave { opacity: 0.15; }
+
+/* ============================================================
+   RIVER JOURNEY NAV
+   ============================================================ */
+.river-nav {
+  position: relative;
+  margin: var(--space-3) auto var(--space-4);
+  max-width: 640px;
+}
+
+.river-nav__line {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  z-index: 0;
+}
+
+.river-nav__nodes {
+  position: relative;
+  z-index: 1;
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: flex;
+  flex-direction: column;
+  gap: clamp(1.6rem, 8vh, 3rem);
+  min-height: 900px;
+  justify-content: space-between;
+  padding-block: 0.5rem;
+}
+
+.river-nav__nodes li:nth-child(2) { align-self: flex-end; }
+.river-nav__nodes li:nth-child(3) { align-self: flex-start; }
+.river-nav__nodes li:nth-child(4) { align-self: center; }
+
+.node {
+  display: flex;
+  align-items: center;
+  gap: var(--space-2);
+  background: none;
+  border: none;
+  color: var(--ivory);
+  padding: 0.3rem;
+  text-align: left;
+}
+
+.node__dot {
+  flex: 0 0 auto;
+  width: 34px; height: 34px;
+  border-radius: 50%;
+  background: var(--peacock-800);
+  border: 2px solid rgba(245, 158, 11, 0.4);
+  display: flex; align-items: center; justify-content: center;
+  transition: border-color 0.3s var(--ease-soft), box-shadow 0.3s var(--ease-soft), background 0.3s var(--ease-soft);
+}
+
+.node__flame {
+  width: 8px; height: 8px;
+  border-radius: 50%;
+  background: rgba(245, 158, 11, 0.4);
+  transition: background 0.3s var(--ease-soft), box-shadow 0.3s var(--ease-soft);
+}
+
+.node__dot--lotus svg { width: 20px; height: 20px; }
+
+.node__label { display: flex; flex-direction: column; line-height: 1.25; }
+.node__num {
+  font-family: var(--font-quote);
+  font-style: italic;
+  font-size: 0.85rem;
+  color: var(--ivory-dim);
+}
+.node__name { font-size: 0.95rem; font-weight: 500; color: var(--ivory-dim); }
+
+.node[aria-current="step"] .node__dot {
+  border-color: var(--gold-300);
+  box-shadow: 0 0 16px rgba(251, 191, 36, 0.55);
+  background: radial-gradient(circle, var(--gold-300), var(--gold-600));
+}
+.node[aria-current="step"] .node__flame { background: var(--peacock-950); }
+.node[aria-current="step"] .node__num,
+.node[aria-current="step"] .node__name { color: var(--gold-100); }
+
+.node.is-complete .node__dot { border-color: var(--teal-400); background: var(--teal-700); }
+.node.is-complete .node__flame { background: var(--teal-400); box-shadow: 0 0 8px var(--teal-400); }
+
+/* ============================================================
+   TEMP — dev audio test panel (delete with the HTML block above
+   once real station interactions trigger these sounds instead)
+   ============================================================ */
+.dev-audio {
+  max-width: 720px;
+  margin: 0 auto var(--space-4);
+  padding: var(--space-2) var(--space-3);
+  border: 1px dashed rgba(255, 122, 77, 0.5);
+  border-radius: 14px;
+  background: rgba(255, 122, 77, 0.06);
+}
+.dev-audio__title {
+  font-size: 0.8rem;
+  color: var(--saffron-500);
+  margin-bottom: var(--space-2);
+}
+.dev-audio__row { display: flex; flex-wrap: wrap; gap: 0.5rem; }
+.dev-audio__row button {
+  background: rgba(13, 40, 71, 0.7);
+  border: 1px solid rgba(245, 158, 11, 0.35);
+  color: var(--ivory);
+  padding: 0.4rem 0.8rem;
+  border-radius: 999px;
+  font-size: 0.85rem;
+  transition: border-color 0.2s var(--ease-soft), transform 0.15s var(--ease-soft);
+}
+.dev-audio__row button:hover { border-color: var(--gold-300); transform: translateY(-1px); }
+
+/* ============================================================
+   BUTTONS
+   ============================================================ */
+.btn-primary {
+  background: linear-gradient(180deg, var(--gold-300), var(--gold-600));
+  color: var(--peacock-950);
+  border: none;
+  font-weight: 600;
+  font-size: 1rem;
+  padding: 0.75rem 1.8rem;
+  border-radius: 999px;
+  box-shadow: 0 8px 24px -8px rgba(245, 158, 11, 0.6);
+  transition: transform 0.2s var(--ease-soft), box-shadow 0.2s var(--ease-soft), opacity 0.2s;
+}
+.btn-primary:hover:not(:disabled) { transform: translateY(-2px); box-shadow: 0 12px 28px -8px rgba(245, 158, 11, 0.75); }
+.btn-primary:disabled { opacity: 0.5; cursor: not-allowed; transform: none; }
+
+.btn-outline {
+  background: transparent;
+  border: 1.5px solid rgba(245, 158, 11, 0.55);
+  color: var(--ivory);
+  font-weight: 500;
+  padding: 0.6rem 1.6rem;
+  border-radius: 999px;
+  transition: border-color 0.2s var(--ease-soft), background 0.2s var(--ease-soft);
+}
+.btn-outline:hover { border-color: var(--gold-300); background: rgba(245, 158, 11, 0.1); }
+
+/* ============================================================
+   STATION 1 — IDENTITY WHEEL
+   ============================================================ */
+.wheel-activity { display: flex; flex-direction: column; align-items: center; gap: var(--space-4); }
+
+.wheel-stage { display: flex; flex-direction: column; align-items: center; gap: var(--space-3); }
+
+.wheel-frame {
+  position: relative;
+  width: min(78vw, 300px);
+  aspect-ratio: 1;
+}
+
+#identity-wheel {
+  width: 100%;
+  height: 100%;
+  display: block;
+  filter: drop-shadow(0 10px 30px rgba(0, 0, 0, 0.45));
+}
+
+.wheel-slice { transition: filter 0.3s var(--ease-soft), opacity 0.3s var(--ease-soft); }
+.wheel-slice--active { filter: brightness(1.5); }
+
+.wheel-pointer {
+  position: absolute;
+  top: -6px;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 0; height: 0;
+  border-left: 11px solid transparent;
+  border-right: 11px solid transparent;
+  border-top: 18px solid var(--gold-300);
+  filter: drop-shadow(0 2px 4px rgba(0, 0, 0, 0.5));
+  z-index: 2;
+}
+
+.wheel-hub {
+  position: absolute;
+  top: 50%; left: 50%;
+  transform: translate(-50%, -50%);
+  width: 20%;
+  aspect-ratio: 1;
+  border-radius: 50%;
+  z-index: 2;
+}
+.wheel-hub svg { width: 100%; height: 100%; }
+
+.spin-counter { color: var(--ivory-dim); font-size: 0.92rem; text-align: center; }
+
+/* ============================================================
+   INQUIRY MODAL
+   ============================================================ */
+.modal-overlay {
+  position: fixed;
+  inset: 0;
+  z-index: 50;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: var(--space-3);
+  background: rgba(6, 16, 36, 0.72);
+  backdrop-filter: blur(6px);
+  animation: fade-in 0.25s var(--ease-soft);
+}
+
+@keyframes fade-in {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+
+.inquiry-card {
+  max-width: 440px;
+  width: 100%;
+  background: linear-gradient(160deg, rgba(13, 40, 71, 0.95), rgba(6, 16, 36, 0.98));
+  border: 1px solid rgba(245, 158, 11, 0.4);
+  border-radius: 32px 32px 14px 14px;
+  padding: var(--space-4) var(--space-3);
+  text-align: center;
+  box-shadow: 0 30px 70px -20px rgba(0, 0, 0, 0.7);
+  animation: rise 0.35s var(--ease-soft);
+}
+
+.inquiry-card__label {
+  font-family: var(--font-quote);
+  font-style: italic;
+  color: var(--teal-400);
+  font-size: 1.15rem;
+  margin-bottom: 0.4rem;
+}
+
+.inquiry-card__question {
+  font-size: 1.4rem;
+  color: var(--gold-100);
+  margin-bottom: var(--space-3);
+}
+
+.inquiry-card__answers { display: flex; justify-content: center; gap: 1rem; }
+
+.inquiry-card__explanation {
+  margin-top: var(--space-3);
+  color: var(--ivory-dim);
+  font-size: 1.02rem;
+  line-height: 1.65;
+  text-align: left;
+  animation: fade-in 0.4s var(--ease-soft);
+}
+
+.inquiry-card__continue { margin-top: var(--space-3); }
+
+/* ============================================================
+   SOUL REVEAL
+   ============================================================ */
+.soul-reveal {
+  max-width: 56ch;
+  text-align: center;
+  padding: var(--space-4) var(--space-2);
+  border-top: 1px solid rgba(245, 158, 11, 0.25);
+  animation: rise 0.7s var(--ease-soft);
+}
+
+.soul-reveal__title {
+  font-size: 1.6rem;
+  background: linear-gradient(180deg, var(--gold-100), var(--gold-500));
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+  margin-bottom: var(--space-2);
+}
+
+.soul-reveal__quote {
+  color: var(--ivory-dim);
+  font-size: 1.05rem;
+  line-height: 1.7;
+  margin-bottom: var(--space-3);
+}
+
+.soul-reveal__verse {
+  font-family: var(--font-quote);
+  font-style: italic;
+  font-size: 1.15rem;
+  color: var(--gold-300);
+  line-height: 1.6;
+}
+.soul-reveal__verse span {
+  display: block;
+  margin-top: 0.4rem;
+  font-size: 0.95rem;
+  color: var(--ivory-dim);
+  font-style: normal;
+}
+
+/* ============================================================
+   STATION PANELS — "temple niche"
+   ============================================================ */
+.stage { position: relative; }
+
+.panel {
+  display: none;
+  background: linear-gradient(160deg, rgba(13, 40, 71, 0.75), rgba(6, 16, 36, 0.85));
+  border: 1px solid rgba(245, 158, 11, 0.25);
+  border-radius: var(--niche-radius);
+  padding: var(--space-4) var(--space-3) var(--space-4);
+  max-width: 720px;
+  margin: 0 auto;
+  backdrop-filter: blur(10px);
+  box-shadow: 0 30px 60px -30px rgba(0, 0, 0, 0.6), inset 0 1px 0 rgba(255, 255, 255, 0.04);
+  animation: rise 0.6s var(--ease-soft);
+}
+
+.panel[data-active="true"] { display: block; }
+
+@keyframes rise {
+  from { opacity: 0; transform: translateY(14px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+.panel__kicker {
+  font-family: var(--font-quote);
+  font-style: italic;
+  color: var(--teal-400);
+  font-size: 1.05rem;
+  margin-bottom: 0.3rem;
+}
+
+.panel__title {
+  font-size: clamp(1.5rem, 4vw, 2.1rem);
+  color: var(--gold-100);
+  max-width: 22ch;
+}
+
+.panel__intro {
+  margin-top: var(--space-2);
+  max-width: 58ch;
+  color: var(--ivory-dim);
+  font-size: 1.05rem;
+}
+
+.panel__body {
+  margin-top: var(--space-4);
+}
+
+.panel__body--placeholder {
+  border: 1px dashed rgba(20, 184, 166, 0.35);
+  border-radius: 20px;
+  padding: var(--space-4);
+  text-align: center;
+  color: rgba(246, 241, 228, 0.5);
+  font-style: italic;
+  font-family: var(--font-quote);
+  font-size: 1.15rem;
+}
+
+/* ============================================================
+   RESPONSIVE
+   ============================================================ */
+@media (min-width: 860px) {
+  .river-nav { max-width: 200px; float: left; margin-top: var(--space-4); }
+  .stage { margin-left: 220px; }
+  .river-nav__nodes li:nth-child(2),
+  .river-nav__nodes li:nth-child(3),
+  .river-nav__nodes li:nth-child(4) { align-self: flex-start; }
+  .node__label { display: none; }
+  .river-nav__nodes { min-height: 640px; }
+}
+
+@media (min-width: 860px) and (hover: hover) {
+  .node:hover .node__label {
+    display: flex;
+    position: absolute;
+    left: 46px;
+    background: var(--peacock-800);
+    border: 1px solid rgba(245, 158, 11, 0.3);
+    padding: 0.4rem 0.7rem;
+    border-radius: 8px;
+    white-space: nowrap;
+    z-index: 5;
+  }
+  .node { position: relative; }
+}
+
+@media (max-width: 480px) {
+  .panel { padding: var(--space-3) var(--space-2); border-radius: 44px 44px 10px 10px; }
+  .glyph { height: 42px; }
+  .ambient-toggle__label { display: none; }
+  .ambient-toggle { padding: 0.5rem; }
+}
