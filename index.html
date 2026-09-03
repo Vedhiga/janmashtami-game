@@ -151,10 +151,22 @@
     <section class="panel" id="station-1" data-active="true">
       <p class="panel__kicker">Station I</p>
       <h2 class="panel__title">Who Am I?</h2>
-      <p class="panel__intro">Beneath every name you've worn and every role you've played, something has watched it all without changing. Spin the wheel and question what you find.</p>
+      <p class="panel__intro" id="station1-intro-a">Beneath every name you've worn and every role you've played, something has watched it all without changing. Spin the wheel and question what you find.</p>
+      <p class="panel__intro" id="station1-intro-b" hidden>Everything about you that can be pointed to, named, or removed will eventually be removed. Tap each layer away and see what's left when nothing external remains.</p>
+
+      <div class="substation-switcher" role="tablist" aria-label="Station I activities">
+        <button type="button" class="substation-tab" id="substation-tab-a" data-activity="a" role="tab" aria-selected="true" aria-controls="wheel-activity">
+          <span class="substation-tab__icon" aria-hidden="true">🎡</span>
+          <span>Spin the Wheel</span>
+        </button>
+        <button type="button" class="substation-tab" id="substation-tab-b" data-activity="b" role="tab" aria-selected="false" aria-controls="layers-activity">
+          <span class="substation-tab__icon" aria-hidden="true">🧩</span>
+          <span>Remove the Layers</span>
+        </button>
+      </div>
 
       <div class="panel__body">
-        <div class="wheel-activity" id="wheel-activity">
+        <div class="wheel-activity" id="wheel-activity" data-active="true" role="tabpanel" aria-labelledby="substation-tab-a">
           <div class="wheel-stage">
             <div class="wheel-frame">
               <svg id="identity-wheel" viewBox="0 0 320 320" role="img" aria-label="Identity wheel with seven slices: Name, Age, Body, Emotions, Career, Relationships, Memories"></svg>
@@ -173,6 +185,77 @@
             <h3 class="soul-reveal__title">Something remains constant.</h3>
             <p class="soul-reveal__quote">Name, age, body, feeling, title, bond, and memory — every one of them has already changed since you were born, and every one will change again. Yet something has been quietly aware of all of it, unmoved, the whole time.</p>
             <p class="soul-reveal__verse">"As the soul passes, in this body, through childhood, youth and old age, so too it passes into another body. The wise are not deluded by this."<br><span>— Bhagavad Gita 2.13</span></p>
+          </div>
+        </div>
+
+        <div class="layers-activity" id="layers-activity" data-active="false" role="tabpanel" aria-labelledby="substation-tab-b">
+          <div class="avatar-stage" id="avatar-stage" data-removed="0">
+            <div class="avatar-glow" aria-hidden="true"></div>
+
+            <svg class="avatar-figure" id="avatar-figure" viewBox="0 0 200 220" role="img" aria-label="A seated silhouette, gradually illuminated as each layer is removed" aria-hidden="true">
+              <defs>
+                <radialGradient id="avatarGradient" cx="50%" cy="38%" r="65%">
+                  <stop offset="0%" stop-color="#fef08a"/>
+                  <stop offset="55%" stop-color="#f59e0b"/>
+                  <stop offset="100%" stop-color="#b45309"/>
+                </radialGradient>
+              </defs>
+              <ellipse cx="100" cy="196" rx="54" ry="10" fill="#000" opacity="0.25"/>
+              <path d="M100,150 C60,150 46,178 46,206 L154,206 C154,178 140,150 100,150 Z" fill="url(#avatarGradient)"/>
+              <path d="M62,150 C50,168 44,188 44,206 L36,206 C36,182 44,160 58,144 Z" fill="url(#avatarGradient)"/>
+              <path d="M138,150 C150,168 156,188 156,206 L164,206 C164,182 156,160 142,144 Z" fill="url(#avatarGradient)"/>
+              <circle cx="100" cy="100" r="34" fill="url(#avatarGradient)"/>
+              <path d="M78,150 C78,128 86,116 100,116 C114,116 122,128 122,150 Z" fill="url(#avatarGradient)"/>
+            </svg>
+
+            <div class="layer-shell" data-layer="0" style="--shell-scale:2.05; --shell-hue:200"></div>
+            <div class="layer-shell" data-layer="1" style="--shell-scale:1.82; --shell-hue:250"></div>
+            <div class="layer-shell" data-layer="2" style="--shell-scale:1.6; --shell-hue:20"></div>
+            <div class="layer-shell" data-layer="3" style="--shell-scale:1.4; --shell-hue:330"></div>
+            <div class="layer-shell" data-layer="4" style="--shell-scale:1.22; --shell-hue:170"></div>
+            <div class="layer-shell" data-layer="5" style="--shell-scale:1.08; --shell-hue:45"></div>
+          </div>
+
+          <div class="layer-list" id="layer-list" role="list" aria-label="Layers to remove">
+            <button type="button" class="layer-chip" data-layer="0">
+              <span class="layer-chip__icon" aria-hidden="true">👗</span>
+              <span class="layer-chip__label">Body</span>
+              <span class="layer-chip__status" aria-hidden="true"></span>
+            </button>
+            <button type="button" class="layer-chip" data-layer="1">
+              <span class="layer-chip__icon" aria-hidden="true">😊</span>
+              <span class="layer-chip__label">Emotions</span>
+              <span class="layer-chip__status" aria-hidden="true"></span>
+            </button>
+            <button type="button" class="layer-chip" data-layer="2">
+              <span class="layer-chip__icon" aria-hidden="true">💼</span>
+              <span class="layer-chip__label">Profession</span>
+              <span class="layer-chip__status" aria-hidden="true"></span>
+            </button>
+            <button type="button" class="layer-chip" data-layer="3">
+              <span class="layer-chip__icon" aria-hidden="true">🪪</span>
+              <span class="layer-chip__label">Name</span>
+              <span class="layer-chip__status" aria-hidden="true"></span>
+            </button>
+            <button type="button" class="layer-chip" data-layer="4">
+              <span class="layer-chip__icon" aria-hidden="true">📱</span>
+              <span class="layer-chip__label">Identity &amp; Status</span>
+              <span class="layer-chip__status" aria-hidden="true"></span>
+            </button>
+            <button type="button" class="layer-chip" data-layer="5">
+              <span class="layer-chip__icon" aria-hidden="true">🧠</span>
+              <span class="layer-chip__label">Thoughts &amp; Ego</span>
+              <span class="layer-chip__status" aria-hidden="true"></span>
+            </button>
+          </div>
+
+          <p class="spin-counter" id="layers-counter">Layers remaining: 6 of 6</p>
+
+          <div class="soul-reveal" id="soul-reveal-b" hidden tabindex="-1">
+            <p class="panel__kicker">The Soul Reveal</p>
+            <h3 class="soul-reveal__title">If everything external is removed… who is still there?</h3>
+            <p class="soul-reveal__quote">The body changed, the feelings passed, the title was retired, the name was just a label, the profile was just a projection, even the thoughts kept shifting. Underneath all six, something radiant was watching the whole time — untouched, unchanged, and still here.</p>
+            <p class="soul-reveal__verse">"As the embodied soul continuously passes, in this body, from boyhood to youth to old age, the soul similarly passes into another body at death. A sober person is not bewildered by such a change."<br><span>— Bhagavad Gita 2.13</span></p>
           </div>
         </div>
       </div>

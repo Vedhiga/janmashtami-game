@@ -314,4 +314,178 @@ const Station1 = (() => {
   return { init };
 })();
 
-document.addEventListener("DOMContentLoaded", Station1.init);
+/* ============================================================
+   Station 1, Activity B: Remove the Layers.
+
+   Six independent "shells" wrap a central figure. Layers can be
+   tapped in any order (either the shell itself or its matching
+   chip in the list below the avatar) — each dissolves on its own,
+   the figure's glow grows with every layer gone, and once all six
+   are released the figure settles into its final radiant state.
+   ============================================================ */
+const Station1Layers = (() => {
+  const LAYERS = [
+    { key: "body", label: "Body", icon: "\ud83d\udc57" },
+    { key: "emotions", label: "Emotions", icon: "\ud83d\ude0a" },
+    { key: "profession", label: "Profession", icon: "\ud83d\udcbc" },
+    { key: "name", label: "Name", icon: "\ud83e\udea9" },
+    { key: "identity", label: "Identity & Status", icon: "\ud83d\udcf1" },
+    { key: "thoughts", label: "Thoughts & Ego", icon: "\ud83e\udde0" },
+  ];
+  const LAYER_COUNT = LAYERS.length;
+
+  const state = {
+    removed: new Set(),
+    revealed: false,
+  };
+
+  const els = {};
+
+  function cacheEls() {
+    els.root = document.getElementById("layers-activity");
+    els.stage = document.getElementById("avatar-stage");
+    els.figure = document.getElementById("avatar-figure");
+    els.shells = Array.from(document.querySelectorAll(".layer-shell"));
+    els.chips = Array.from(document.querySelectorAll(".layer-chip"));
+    els.counter = document.getElementById("layers-counter");
+    els.reveal = document.getElementById("soul-reveal-b");
+  }
+
+  function shellFor(index) {
+    return els.shells.find((el) => Number(el.dataset.layer) === index);
+  }
+  function chipFor(index) {
+    return els.chips.find((el) => Number(el.dataset.layer) === index);
+  }
+
+  function removeLayer(index) {
+    if (state.revealed || state.removed.has(index) || Number.isNaN(index)) return;
+    state.removed.add(index);
+
+    const shell = shellFor(index);
+    const chip = chipFor(index);
+
+    if (window.AudioEngine) AudioEngine.playWhoosh({ rising: false, duration: 0.5, volume: 0.18 });
+
+    if (shell) {
+      shell.classList.add("layer-shell--dissolving");
+      shell.addEventListener(
+        "animationend",
+        () => shell.classList.add("layer-shell--removed"),
+        { once: true }
+      );
+    }
+
+    if (chip) {
+      chip.classList.add("layer-chip--removed");
+      chip.disabled = true;
+    }
+
+    if (window.ParticleEngine) {
+      const rect = els.stage.getBoundingClientRect();
+      const xRatio = (rect.left + rect.width / 2) / window.innerWidth;
+      const yRatio = (rect.top + rect.height / 2) / window.innerHeight;
+      ParticleEngine.burst(xRatio, yRatio, { count: 26 });
+    }
+
+    els.stage.dataset.removed = String(state.removed.size);
+    els.stage.style.setProperty("--glow-level", String(state.removed.size));
+
+    updateCounter();
+
+    if (state.removed.size >= LAYER_COUNT) {
+      showReveal();
+    }
+  }
+
+  function updateCounter() {
+    const remaining = LAYER_COUNT - state.removed.size;
+    els.counter.textContent =
+      remaining > 0
+        ? `Layers remaining: ${remaining} of ${LAYER_COUNT}`
+        : "Layers remaining: 0 of 6 \u00b7 nothing external is left";
+  }
+
+  function showReveal() {
+    state.revealed = true;
+    els.stage.classList.add("avatar-stage--radiant");
+    els.reveal.hidden = false;
+    els.reveal.focus();
+
+    if (window.ParticleEngine) ParticleEngine.burst(0.5, 0.35, { count: 70 });
+    if (window.AudioEngine) AudioEngine.playCelebration();
+
+    els.reveal.scrollIntoView({ behavior: "smooth", block: "center" });
+  }
+
+  function bind() {
+    // Shells are purely decorative (the avatar's glow builds up behind
+    // them) and are deliberately non-interactive — they're allowed to
+    // visually bleed past the avatar stage as they get bigger, and giving
+    // them pointer-events would let a big outer shell block taps on the
+    // chip list underneath it. The chips are the actual tap targets.
+    els.chips.forEach((chip) => {
+      chip.addEventListener("click", () => removeLayer(Number(chip.dataset.layer)));
+    });
+  }
+
+  function init() {
+    if (!document.getElementById("avatar-stage")) return; // not on this page
+    cacheEls();
+    els.stage.style.setProperty("--glow-level", "0");
+    bind();
+    updateCounter();
+  }
+
+  return { init };
+})();
+
+/* ============================================================
+   Station 1 sub-station switcher — flips between Activity A
+   (Spin the Wheel) and Activity B (Remove the Layers) without
+   touching either activity's internal state.
+   ============================================================ */
+const Station1Switcher = (() => {
+  const els = {};
+
+  function activate(which) {
+    const isA = which === "a";
+
+    els.tabA.setAttribute("aria-selected", String(isA));
+    els.tabB.setAttribute("aria-selected", String(!isA));
+
+    els.activityA.dataset.active = String(isA);
+    els.activityB.dataset.active = String(!isA);
+
+    els.introA.hidden = !isA;
+    els.introB.hidden = isA;
+
+    if (window.AudioEngine) AudioEngine.playClick({ volume: 0.1 });
+  }
+
+  function bind() {
+    els.tabA.addEventListener("click", () => activate("a"));
+    els.tabB.addEventListener("click", () => activate("b"));
+  }
+
+  function init() {
+    els.tabA = document.getElementById("substation-tab-a");
+    els.tabB = document.getElementById("substation-tab-b");
+    if (!els.tabA || !els.tabB) return; // not on this page
+
+    els.activityA = document.getElementById("wheel-activity");
+    els.activityB = document.getElementById("layers-activity");
+    els.introA = document.getElementById("station1-intro-a");
+    els.introB = document.getElementById("station1-intro-b");
+
+    bind();
+  }
+
+  return { init };
+})();
+
+document.addEventListener("DOMContentLoaded", () => {
+  Station1.init();
+  Station1Layers.init();
+  Station1Switcher.init();
+});
